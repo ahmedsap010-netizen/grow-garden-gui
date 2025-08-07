@@ -1,115 +1,101 @@
--- 🌿 Grow a Garden GUI | Anti-AFK + Auto GUI | Made by Ahmed 🪄
-
+-- [[ سكربت شراء بذور وأدوات + Anti-AFK ]] --
 local Players = game:GetService("Players")
-local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local Player = Players.LocalPlayer
-local Gui = Instance.new("ScreenGui", Player:WaitForChild("PlayerGui"))
-Gui.Name = "GrowGUI"
+local RS = game:GetService("ReplicatedStorage")
+local VGUI = Instance.new("ScreenGui", Players.LocalPlayer:WaitForChild("PlayerGui"))
+VGUI.Name = "GrowGUI"
 
-local frame = Instance.new("Frame", Gui)
-frame.Size = UDim2.new(0, 350, 0, 320)
-frame.Position = UDim2.new(0.5, -175, 0.5, -160)
-frame.BackgroundColor3 = Color3.fromRGB(35,35,35)
-frame.Active = true
-frame.Draggable = true
+-- Anti-AFK
+game:GetService("Players").LocalPlayer.Idled:Connect(function()
+    game:GetService("VirtualUser"):Button2Down(Vector2.new())
+    wait(1)
+    game:GetService("VirtualUser"):Button2Up(Vector2.new())
+end)
 
-local title = Instance.new("TextLabel", frame)
-title.Text = "🌿 Grow Garden GUI - Ahmed"
-title.Size = UDim2.new(1,0,0,30)
-title.BackgroundColor3 = Color3.fromRGB(80,0,0)
-title.TextColor3 = Color3.new(1,1,1)
-title.Font = Enum.Font.SourceSansBold
-title.TextScaled = true
-
+-- عناصر المتاجر
 local seeds = {
-    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn",
-    "Daffodil", "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus",
-    "Dragon Fruit", "Mango", "Grape", "Mushroom", "Pepper", "Cacao", "Beanstalk",
-    "Ember Lily", "Sugar Apple", "Burning Bud", "Giant Pinecone", "Elder Strawberry"
+    "Carrot", "Strawberry", "Blueberry", "Orange Tulip", "Tomato", "Corn", "Daffodil",
+    "Watermelon", "Pumpkin", "Apple", "Bamboo", "Coconut", "Cactus", "Dragon Fruit", "Mango",
+    "Grape", "Mushroom", "Pepper", "Cacao", "Beanstalk", "Ember Lily", "Sugar Apple", 
+    "Burning Bud", "Giant Pinecone", "Elder Strawberry"
 }
 
-local eggs = {
-    "Common Egg", "Common Summer Egg", "Rare Summer Egg", "Paradise Egg", "Mythical Egg", "Bug Egg"
-}
-
-local gears = {
+local gear = {
     "Watering Can", "Trading Ticket", "Trowel", "Recall Wrench", "Basic Sprinkler",
     "Advanced Sprinkler", "Godly Sprinkler", "Master Sprinkler", "Grandmaster Sprinkler",
     "Magnifying Glass", "Cleaning Spray", "Favorite Tool", "Harvest Tool",
     "Friendship Pot", "Medium Toy", "Medium Treat"
 }
 
-local function createDropdown(items, label, positionY)
-    local box = Instance.new("TextButton", frame)
-    box.Size = UDim2.new(0.9,0,0,30)
-    box.Position = UDim2.new(0.05,0,positionY,0)
-    box.BackgroundColor3 = Color3.fromRGB(60,60,60)
-    box.TextColor3 = Color3.new(1,1,1)
-    box.TextScaled = true
-    box.Text = label
+-- واجهة المستخدم
+local frame = Instance.new("Frame", VGUI)
+frame.Size = UDim2.new(0, 400, 0, 300)
+frame.Position = UDim2.new(0.5, -200, 0.5, -150)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.Active = true
+frame.Draggable = true
 
-    local dropdown = Instance.new("Frame", box)
-    dropdown.Size = UDim2.new(1,0,0,#items * 20)
-    dropdown.Position = UDim2.new(0,0,1,0)
-    dropdown.BackgroundColor3 = Color3.fromRGB(45,45,45)
-    dropdown.Visible = false
-    dropdown.ClipsDescendants = true
+local title = Instance.new("TextLabel", frame)
+title.Text = "Grow a Garden GUI 🌱"
+title.Size = UDim2.new(1, 0, 0, 30)
+title.BackgroundColor3 = Color3.fromRGB(50, 100, 50)
+title.TextColor3 = Color3.new(1, 1, 1)
+title.TextScaled = true
+title.Font = Enum.Font.SourceSansBold
 
-    for i, item in ipairs(items) do
-        local choice = Instance.new("TextButton", dropdown)
-        choice.Size = UDim2.new(1,0,0,20)
-        choice.Position = UDim2.new(0,0,0,(i-1)*20)
-        choice.BackgroundColor3 = Color3.fromRGB(70,70,70)
-        choice.TextColor3 = Color3.new(1,1,1)
-        choice.Text = item
-        choice.TextScaled = true
-        choice.MouseButton1Click:Connect(function()
-            box.Text = item
-            dropdown.Visible = false
-        end)
-    end
+local seedDrop = Instance.new("TextButton", frame)
+seedDrop.Text = "🌱 شراء بذرة"
+seedDrop.Size = UDim2.new(1, -20, 0, 30)
+seedDrop.Position = UDim2.new(0, 10, 0, 50)
+seedDrop.BackgroundColor3 = Color3.fromRGB(60, 90, 60)
+seedDrop.TextColor3 = Color3.new(1,1,1)
+seedDrop.Font = Enum.Font.SourceSans
+seedDrop.TextScaled = true
 
-    box.MouseButton1Click:Connect(function()
-        dropdown.Visible = not dropdown.Visible
-    end)
+local gearDrop = Instance.new("TextButton", frame)
+gearDrop.Text = "🛠️ شراء أداة"
+gearDrop.Size = UDim2.new(1, -20, 0, 30)
+gearDrop.Position = UDim2.new(0, 10, 0, 90)
+gearDrop.BackgroundColor3 = Color3.fromRGB(90, 60, 60)
+gearDrop.TextColor3 = Color3.new(1,1,1)
+gearDrop.Font = Enum.Font.SourceSans
+gearDrop.TextScaled = true
 
-    return box
-end
+local listBox = Instance.new("TextBox", frame)
+listBox.PlaceholderText = "العنصر المختار"
+listBox.Size = UDim2.new(1, -20, 0, 30)
+listBox.Position = UDim2.new(0, 10, 0, 140)
+listBox.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+listBox.TextColor3 = Color3.new(1,1,1)
+listBox.Font = Enum.Font.SourceSans
+listBox.TextScaled = true
+listBox.Text = ""
 
-local seedBtn = createDropdown(seeds, "اختر بذرة", 0.15)
-local eggBtn  = createDropdown(eggs,  "اختر بيضة", 0.35)
-local gearBtn = createDropdown(gears, "اختر أداة", 0.55)
+local buyBtn = Instance.new("TextButton", frame)
+buyBtn.Text = "🛒 شراء"
+buyBtn.Size = UDim2.new(1, -20, 0, 30)
+buyBtn.Position = UDim2.new(0, 10, 0, 190)
+buyBtn.BackgroundColor3 = Color3.fromRGB(100, 100, 30)
+buyBtn.TextColor3 = Color3.new(1,1,1)
+buyBtn.Font = Enum.Font.SourceSansBold
+buyBtn.TextScaled = true
 
-local function createBuyBtn(text, color, posY, getType, getName)
-    local btn = Instance.new("TextButton", frame)
-    btn.Size = UDim2.new(0.9,0,0,30)
-    btn.Position = UDim2.new(0.05,0,posY,0)
-    btn.BackgroundColor3 = color
-    btn.TextColor3 = Color3.new(1,1,1)
-    btn.Font = Enum.Font.SourceSansBold
-    btn.TextScaled = true
-    btn.Text = text
+local currentMode = "Seed"
 
-    btn.MouseButton1Click:Connect(function()
-        local event = ReplicatedStorage:FindFirstChild("BuyItem")
-        if event then
-            pcall(function()
-                event:FireServer(getType(), getName().Text)
-            end)
-        end
-    end)
-end
+seedDrop.MouseButton1Click:Connect(function()
+	currentMode = "Seed"
+	listBox.Text = seeds[math.random(1, #seeds)]
+end)
 
-createBuyBtn("✅ شراء البذرة", Color3.fromRGB(0,170,0), 0.25, function() return "Seed" end, function() return seedBtn end)
-createBuyBtn("🥚 شراء البيضة", Color3.fromRGB(170,120,0), 0.45, function() return "Egg" end, function() return eggBtn end)
-createBuyBtn("🛠️ شراء الأداة", Color3.fromRGB(0,120,170), 0.65, function() return "Gear" end, function() return gearBtn end)
+gearDrop.MouseButton1Click:Connect(function()
+	currentMode = "Gear"
+	listBox.Text = gear[math.random(1, #gear)]
+end)
 
--- 🛡️ Anti-AFK
-pcall(function()
-    local vu = game:GetService("VirtualUser")
-    game:GetService("Players").LocalPlayer.Idled:Connect(function()
-        vu:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-        wait(1)
-        vu:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
-    end)
+buyBtn.MouseButton1Click:Connect(function()
+	local item = listBox.Text
+	if currentMode == "Seed" then
+		RS:WaitForChild("GameEvents"):WaitForChild("BuySeedStock"):FireServer(item)
+	elseif currentMode == "Gear" then
+		RS:WaitForChild("GameEvents"):WaitForChild("BuyGearStock"):FireServer(item)
+	end
 end)
